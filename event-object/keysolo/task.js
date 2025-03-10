@@ -4,6 +4,7 @@ class Game {
     this.wordElement = container.querySelector('.word');
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
+    this.timerElement = container.querySelector('.time__remaining');
 
     this.reset();
 
@@ -14,17 +15,43 @@ class Game {
     this.setNewWord();
     this.winsElement.textContent = 0;
     this.lossElement.textContent = 0;
+    this.startTimer();
+  }
+
+  startTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+
+    const wordLength = this.currentWord.length;
+    let timeRemaining = wordLength;
+
+    this.timerElement.textContent = timeRemaining;
+
+    this.timerInterval = setInterval (() => {
+      timeRemaining --;
+      this.timerElement.textContent = timeRemaining;
+      if (timeRemaining <=0) {
+        clearInterval(this.timerInterval);
+        this.fail();
+      }
+    }, 1000);
   }
 
   registerEvents() {
-    /*
-      TODO:
-      Написать обработчик события, который откликается
-      на каждый введённый символ.
-      В случае правильного ввода символа вызываем this.success()
-      При неправильном вводе символа - this.fail();
-      DOM-элемент текущего символа находится в свойстве this.currentSymbol.
-     */
+    const currentSymbolPress = (Event) => {
+      let key = Event.key;
+      if (key.toLowerCase() === this.currentSymbol.textContent.toLowerCase()) {
+        this.success();
+        return;
+      }
+      if (key === "Shift" || key === "Alt" || key === "Control") {
+        return
+      }
+      this.fail();
+    }
+
+    document.addEventListener("keyup", currentSymbolPress);
   }
 
   success() {
@@ -42,6 +69,7 @@ class Game {
       this.reset();
     }
     this.setNewWord();
+    this.startTimer();
   }
 
   fail() {
@@ -50,11 +78,12 @@ class Game {
       this.reset();
     }
     this.setNewWord();
+    this.startTimer();
   }
 
   setNewWord() {
     const word = this.getWord();
-
+    this.currentWord = word;
     this.renderWord(word);
   }
 
