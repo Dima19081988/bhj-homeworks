@@ -22,7 +22,7 @@ function loadPoll(){
                     answerButton.dataset.index = index;
                     pollAnswers.appendChild(answerButton);
                     answerButton.addEventListener('click', () => {
-                        // alert ('Спасибо, ваш голос засчитан!');
+                        alert ('Спасибо, ваш голос засчитан!');
                         sendVote(pollId, index);
                     });
                 });
