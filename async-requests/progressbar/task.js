@@ -16,7 +16,6 @@ form.addEventListener('submit', function(event) {
     const xhr = new XMLHttpRequest();
     xhr.upload.addEventListener('progress', function(event) {
         if (event.lengthComputable) {
-            console.log(`Загружено: ${event.loaded}, Всего: ${event.total}, Процент: ${percentComplete}`);
             const percentComplete = event.loaded / event.total;
             progress.value = percentComplete;
         }
